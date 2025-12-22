@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gray: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 48px;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--success), var(--warning));
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 32px;
+            padding: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--dark), #374151);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .student-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .student-status {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .result-content {
+            background: white;
+            padding: 32px;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-item.success {
+            border-left-color: var(--success);
+        }
+
+        .info-item.warning {
+            border-left-color: var(--warning);
+        }
+
+        .info-item.danger {
+            border-left-color: var(--danger);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark);
+            flex: 1;
+        }
+
+        .info-value {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .value-success {
+            color: var(--success);
+        }
+
+        .value-warning {
+            color: var(--warning);
+        }
+
+        .value-danger {
+            color: var(--danger);
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: var(--danger);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid var(--danger);
+            display: none;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .result-content {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                    <path d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+                </svg>
+            </div>
+            <h1>Academic Performance</h1>
+            <p class="subtitle">Проверьте ваши академические показатели</p>
+        </div>
+        
+        <div class="form-group">
+            <label for="surname">Введите вашу фамилию</label>
+            <div class="input-wrapper">
+                <input type="text" id="surname" placeholder="Например: Иванов">
+                <div class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="checkResults()" class="pulse">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Показать результаты
+        </button>
+        
+        <div id="error" class="error-message">
+            Студент с такой фамилией не найден. Проверьте правильность ввода.
+        </div>
+        
+        <div id="result" class="result">
+            <div class="result-header">
+                <div class="student-name" id="result-name">Иванов</div>
+                <div class="student-status">Академическая успеваемость</div>
+            </div>
+            <div class="result-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Количество баллов</div>
+                        <div class="info-value value-success" id="result-points">120/150</div>
+                    </div>
+                    <div class="info-item success">
+                        <div class="info-label">Доклад</div>
+                        <div class="info-value value-success" id="result-report">Есть</div>
+                    </div>
+                    <div class="info-item warning">
+                        <div class="info-label">Конкурс на автомат</div>
+                        <div class="info-value value-warning" id="result-competition">Не выбыл</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // База данных студентов
+        const students = {
+            "абсалямова": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "абузов": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "акмалова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "алексеев": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "атняшева": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "батурина": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "береснева": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "борисов": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "быкова": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "варданян": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "власов": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "воробьева": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+    },
+            "ганиуллина": {
+                points: "145/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "гербулов": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"},
+"гоголева": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "горячев": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "горячева": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "гусев": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "двинянинова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "дерюшева": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "детковских": {
+                points: "140/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "дьякова": {
+                points: "140/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "заманов": {
+                points: "50/150",
+                report: "Нет",
+                competition: "Выбыл"
+    },
+            "зеленко": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "зильберман": {
+                points: "50/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "зуева": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+"зылев": {
+                points: "120/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "исаева": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "каменских": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "карпова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "киселев": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "клементьева": {
+                points: "80/150",
+                report: "Нет",
+                competition: "Не выбыла"
+    },
+            "колесниченко": {
+                points: "50/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "колесова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+    },
+            "кузнецова": {
+                points: "115/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "куклина": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"},
+"кулагина": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "курнева": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "кушов": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "лангина": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "лаптев": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "мартюшев": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "микова": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "михайлова": {
+                points: "140/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "морозова": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "моторин": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "моховикова": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "мустакимов": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+"мухандес": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "насртдинова": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "новикова": {
+                points: "70/150",
+                report: "Нет",
+                competition: "Не выбыла"
+            },
+            "носова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "обухова": {
+                points: "0/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "опалев": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "палымов": {
+                points: "120/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "пасека": {
+                points: "50/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "патраков": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "плюснин": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыл"
+    },
+            "плохенко": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+"погодина": {
+                points: "50/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "поповцев": {
+                points: "115/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "рабченко": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "романова": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "русинова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "рыболовлева": {
+                points: "70/150",
+                report: "Нет",
+                competition: "Не выбыла"
+    },
+            "савельева": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "сайфидинов": {
+                points: "0/150",
+                report: "Нет",
+                competition: "Выбыл"
+    },
+            "сакаева": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "семенова": {
+                points: "70/150",
+                report: "Нет",
+                competition: "Не выбыла"},
+"синяков": {
+                points: "0/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "смертина": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "сосницкая": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "столярова": {
+                points: "80/150",
+                report: "Нет",
+                competition: "Не выбыла"
+            },
+            "телегина": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "тодуа": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "токранова": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "ушакова": {
+                points: "150/150",
+                report: "Есть",
+                competition: "АВТОМАТ"
+            },
+            "федотова": {
+                points: "0/150",
+                report: "Нет",
+                competition: "Выбыла"
+    },
+            "хазаров": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "харина": {
+                points: "115/150",
+                report: "Есть",
+                competition: "Не выбыла"
+    },
+            "цветков": {
+                points: "20/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+ "шаврин": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+    },
+            "шаммедов": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "шаммедов": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыл"
+    },
+            "шарапова": {
+                points: "130/150",
+                report: "Есть",
+                competition: "Не выбыла"
+            },
+            "шарифова": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла"},
+"шаршавин": {
+                points: "40/150",
+                report: "Нет",
+                competition: "Не выбыл"
+            },
+            "шемякин": {
+                points: "115/150",
+                report: "Есть",
+                competition: "Не выбыл"
+            },
+            "шибаев": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "широнина": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыл"
+            },
+            "щекотова": {
+                points: "30/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "якимова": {
+                points: "0/150",
+                report: "Нет",
+                competition: "Выбыла"
+            },
+            "якушенная": {
+                points: "10/150",
+                report: "Нет",
+                competition: "Выбыла" }
+            };
+
+        function checkResults() {
+            const surnameInput = document.getElementById('surname');
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            const resultName = document.getElementById('result-name');
+            const resultPoints = document.getElementById('result-points');
+            const resultReport = document.getElementById('result-report');
+            const resultCompetition = document.getElementById('result-competition');
+            
+            const surname = surnameInput.value.trim().toLowerCase();
+            
+            // Скрываем предыдущие результаты
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            if (!surname) {
+                errorDiv.textContent = "Пожалуйста, введите вашу фамилию";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Ищем студента
+            if (students[surname]) {
+                const student = students[surname];
+                
+                // Заполняем данные
+                resultName.textContent = surname.charAt(0).toUpperCase() + surname.slice(1);
+                resultPoints.textContent = student.points;
+                resultReport.textContent = student.report;
+                resultCompetition.textContent = student.competition;
+                
+                // Показываем результат
+                resultDiv.style.display = 'block';
+                
+                // Прокручиваем к результату
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                errorDiv.textContent = `Студент с фамилией "${surname}" не найден. Проверьте правильность ввода.`;
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // Обработчик нажатия Enter
+        document.getElementById('surname').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkResults();
+            }
+        });
+        
+        // Фокус на поле ввода при загрузке
+        window.onload = function() {
+            document.getElementById('surname').focus();
+        }
+    </script>
+</body>
+</html>
